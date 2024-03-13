@@ -193,4 +193,25 @@ class SubscriptionController extends Controller
         // Log the plan creation for record
         Log::info('Plan created successfully with ID: ' . $plan->id);
     }
+
+private function generateInvoice($customerId, $subscriptionId)
+    {
+        // Replace 'CUSTOMER_ID' with the actual ID of the customer
+$customerId = 'CUSTOMER_ID';
+// Replace 'SUBSCRIPTION_ID' with the actual ID of the subscription
+$subscriptionId = 'SUBSCRIPTION_ID';
+        try {
+            // Generate an invoice for the customer's subscription
+            $invoice = Invoice::create([
+                'customer' => $customerId,
+                'subscription' => $subscriptionId,
+            ]);
+
+            // Log the invoice generation for record
+            Log::info('Invoice generated successfully with ID: ' . $invoice->id);
+        } catch (\Exception $e) {
+            // Error handling
+            Log::error('Error generating invoice: ' . $e->getMessage());
+            throw $e;
+        }
 }
