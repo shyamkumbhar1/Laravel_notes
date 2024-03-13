@@ -214,4 +214,26 @@ $subscriptionId = 'SUBSCRIPTION_ID';
             Log::error('Error generating invoice: ' . $e->getMessage());
             throw $e;
         }
+private function downloadInvoice($invoiceId)
+    {
+// Replace 'INVOICE_ID' with the actual ID of the invoice
+$invoiceId = 'INVOICE_ID';
+        try {
+            // Retrieve the invoice object
+            $invoice = Invoice::retrieve($invoiceId);
+
+            // Download the invoice PDF
+            $invoicePdf = $invoice->invoice_pdf;
+
+            // Output the PDF directly to the browser for download
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="invoice.pdf"');
+            echo file_get_contents($invoicePdf);
+            exit;
+        } catch (\Exception $e) {
+            // Error handling
+            return redirect()->back()->with('error', 'Error downloading invoice: ' . $e->getMessage());
+        }
+
+
 }
