@@ -12,6 +12,7 @@ Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('s
 Route::post('/update-subscription', [SubscriptionController::class, 'updateSubscription'])->name('update.subscription');
 Route::post('/cancel-subscription', [SubscriptionController::class, 'cancelSubscription'])->name('cancel.subscription');
 Route::post('/handle-subscription-renewal', [SubscriptionController::class, 'handleSubscriptionRenewal'])->name('handle.subscription.renewal');
+Route::post('/createPlanl', [SubscriptionController::class, 'createPlan'])->name('createPlan');
 
 
 
@@ -164,5 +165,22 @@ class SubscriptionController extends Controller
 
         // Return a response to Stripe indicating successful webhook processing
         return response()->json(['status' => 'success']);
+    }
+
+ private function createPlan()
+    {
+        // Create a new plan
+        $plan = Plan::create([
+            'amount' => 999, // Amount in cents, adjust as needed
+            'interval' => 'month', // Interval (day, week, month, year)
+            'product' => [
+                'name' => 'Silver Plan', // Name of the plan
+            ],
+            'currency' => 'usd', // Currency
+            'id' => 'silver-plan', // Unique identifier for the plan
+        ]);
+
+        // Log the plan creation for record
+        Log::info('Plan created successfully with ID: ' . $plan->id);
     }
 }
