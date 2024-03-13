@@ -117,3 +117,49 @@ class SubscriptionController extends Controller
         }
     }
 }
+
+
+// Setup WebHook For Subscription Renual 
+// In your webhook controller
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SubscriptionRenewalReminder;
+
+public function handleSubscriptionRenewal(Request $request)
+{
+    $payload = $request->all();
+
+    // Verify the webhook signature
+    // You can use the `stripe-php` library for this:
+    // https://stripe.com/docs/webhooks/signatures
+    // Ensure the event is a valid subscription renewal event
+
+    if ($payload['type'] === 'invoice.payment_succeeded') {
+        // Subscription renewal successful, retrieve subscription ID
+        $subscriptionId = $payload['data']['object']['subscription'];
+
+        // Perform any necessary actions, such as updating user records
+        $subscription = Subscription::retrieve($subscriptionId);
+        $customerId = $subscription->customer;
+
+        // Retrieve user based on Stripe customer ID
+        $user = User::where('stripe_id', $customerId)->first();
+
+        // Update user's subscription status or perform other actions
+        // For example:
+        $user->subscription_status = 'active';
+        $user->save();
+
+        // Calculate the renewal date
+        $nextRenewalDate = $subscription->current_period_end;
+        $twoDaysBeforeRenewal = date('Y-m-d', strtotime('-2 days', $nextRenewalDate));
+
+        // Check if the renewal date is within two days
+        if (strtotime($twoDaysBeforeRenewal) <= strtotime('now')) {
+            // Send notification to user about upcoming renewal
+            Mail::to($user->email)->send(new SubscriptionRenewalReminder);
+        }
+    }
+
+    // Return a response to Stripe indicating successful webhook processing
+    return response()->json(['status' => 'success']);
+}
