@@ -167,6 +167,16 @@ class SubscriptionController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+  private function createPlanIfNeeded()
+    {
+        // Check if the plan already exists
+        $existingPlan = Plan::retrieve('silver-plan');
+
+        if (!$existingPlan) {
+            // Plan doesn't exist, create it
+            $this->createPlan();
+        }
+    }
  private function createPlan()
     {
         // Create a new plan
