@@ -235,5 +235,43 @@ $invoiceId = 'INVOICE_ID';
             return redirect()->back()->with('error', 'Error downloading invoice: ' . $e->getMessage());
         }
 
+public function processSubscriptions(Request $request) // Add multiple subscription in single invoice
+    {
+        try {
+            // Set your Stripe secret key
+            Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            // Fetch the customer from Stripe (assuming you already have the customer object)
+            $customer = Customer::retrieve($request->input('stripe_customer_id'));
+
+            // Retrieve all subscriptions for the customer
+            $subscriptions = $customer->subscriptions;
+
+            // Loop through each subscription
+            foreach ($subscriptions as $subscription) {
+                // Add an invoice item for each subscription
+                InvoiceItem::create([
+                    'customer' => $customer->id,
+                    'subscription' => $subscription->id,
+                    'amount' => $subscription->plan->amount, // You may adjust this based on your billing logic
+                    'currency' => 'usd', // Change this to your currency code
+                    'description' => 'Subscription Charge', // Customize as needed
+                ]);
+            }
+
+            // Retrieve the upcoming invoice for the customer
+            $upcomingInvoice = Invoice::upcoming(['customer' => $customer->id]);
+
+            // Charge the customer for the upcoming invoice
+            $upcomingInvoice->pay();
+
+            // Subscription processing successful, return success response
+            return response()->json(['status' => 'success', 'message' => 'Subscription processing completed successfully']);
+        } catch (\Exception $e) {
+            // Subscription processing failed, return error response
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+
 
 }
