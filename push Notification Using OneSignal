@@ -1,0 +1,91 @@
+// How to send push notifiaction using onesingle in laravel
+
+To send push notifications using OneSignal in a Laravel application, you can use the OneSignal SDK for PHP. Here's a step-by-step guide on how to integrate OneSignal and send push notifications in a Laravel application:
+
+Install OneSignal PHP SDK:
+
+First, install the OneSignal PHP SDK via Composer:
+
+
+composer require onesignal/onesignal-php
+Configure OneSignal Credentials:
+
+Obtain your OneSignal App ID and REST API Key from the OneSignal dashboard.
+
+Add your OneSignal credentials to the Laravel configuration file (.env):
+
+dotenv
+Copy code
+ONESIGNAL_APP_ID=your_onesignal_app_id
+ONESIGNAL_REST_API_KEY=your_onesignal_rest_api_key
+Create Notification Service:
+
+Create a notification service to handle sending push notifications. For example, create a OneSignalNotificationService.php file in the app/Services directory:
+
+php
+Copy code
+<?php
+
+namespace App\Services;
+
+use OneSignal\OneSignal;
+
+class OneSignalNotificationService
+{
+    protected $oneSignal;
+
+    public function __construct()
+    {
+        $this->oneSignal = new OneSignal(env('ONESIGNAL_APP_ID'), env('ONESIGNAL_REST_API_KEY'));
+    }
+
+    public function sendNotification($title, $message, $userId)
+    {
+        $notification = [
+            'contents' => ['en' => $message],
+            'headings' => ['en' => $title],
+            'include_player_ids' => [$userId],
+        ];
+
+        $this->oneSignal->sendNotificationCustom($notification);
+    }
+}
+Send Push Notifications:
+
+Use the OneSignalNotificationService to send push notifications from your controllers or other application logic. For example:
+
+php
+Copy code
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Services\OneSignalNotificationService;
+
+class NotificationController extends Controller
+{
+    protected $oneSignalService;
+
+    public function __construct(OneSignalNotificationService $oneSignalService)
+    {
+        $this->oneSignalService = $oneSignalService;
+    }
+
+    public function sendPushNotification()
+    {
+        $title = 'New Notification';
+        $message = 'This is a test push notification.';
+        $userId = 'user_id_here';
+
+        $this->oneSignalService->sendNotification($title, $message, $userId);
+
+        return response()->json(['message' => 'Push notification sent successfully.']);
+    }
+}
+Define Routes:
+
+Define routes to access the notification controller method:
+
+php
+Copy code
+Route::get('/send-notification', 'NotificationController@sendPushNotification');
