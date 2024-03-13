@@ -126,12 +126,22 @@ use App\Mail\SubscriptionRenewalReminder;
 
 public function handleSubscriptionRenewal(Request $request)
 {
-    $payload = $request->all();
+   // Retrieve the request payload
+        $payload = $request->getContent();
 
-    // Verify the webhook signature
-    // You can use the `stripe-php` library for this:
-    // https://stripe.com/docs/webhooks/signatures
-    // Ensure the event is a valid subscription renewal event
+        // Retrieve the signature from the request headers
+        $signature = $request->header('Stripe-Signature');
+
+        // Verify the signature using your Stripe webhook secret
+        $webhookSecret = config('services.stripe.webhook_secret'); // Retrieve your webhook secret from configuration
+
+        try {
+            // Verify the signature
+            $event = Webhook::constructEvent($payload, $signature, $webhookSecret);
+        } catch (\Exception $e) {
+            // Signature verification failed
+            return response()->json(['error' => 'Invalid signature'], 400);
+        }
 
     if ($payload['type'] === 'invoice.payment_succeeded') {
         // Subscription renewal successful, retrieve subscription ID
