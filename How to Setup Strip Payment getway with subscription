@@ -1,23 +1,19 @@
-Certainly! Let's organize the steps to integrate Stripe payment gateway with Laravel for subscriptions in a comprehensive manner:
-
-Set Up a Stripe Account:
-
-Sign up for a Stripe account at Stripe Dashboard.
-Install the Stripe PHP Library:
-
-Use Composer to install the Stripe PHP library in your Laravel project:
 
 composer require stripe/stripe-php
-Configure Stripe API Keys:
-
-Add your Stripe API keys to your Laravel .env file:
-
+// .env file:
 STRIPE_KEY=your_stripe_publishable_key
 STRIPE_SECRET=your_stripe_secret_key
-Set Up Routes:
 
-Define routes for handling subscription-related actions such as subscribing, updating, and canceling in your routes/web.php file.
-Create Subscription Controller:
+// web.php File :
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SubscriptionController;
+
+Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
+Route::post('/update-subscription', [SubscriptionController::class, 'updateSubscription'])->name('update.subscription');
+Route::post('/cancel-subscription', [SubscriptionController::class, 'cancelSubscription'])->name('cancel.subscription');
+Route::post('/handle-subscription-renewal', [SubscriptionController::class, 'handleSubscriptionRenewal'])->name('handle.subscription.renewal');
+
+
 
 
 php artisan make:controller SubscriptionController
@@ -31,7 +27,10 @@ use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Customer;
 use Stripe\Subscription;
+use Stripe\Webhook;
 use App\Models\User; // Assuming you have a User model
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SubscriptionRenewalReminder;
 
 class SubscriptionController extends Controller
 {
@@ -116,17 +115,10 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-}
 
-
-// Setup WebHook For Subscription Renual 
-// In your webhook controller
-use Illuminate\Support\Facades\Mail;
-use App\Mail\SubscriptionRenewalReminder;
-
-public function handleSubscriptionRenewal(Request $request)
-{
-   // Retrieve the request payload
+    public function handleSubscriptionRenewal(Request $request)
+    {
+        // Retrieve the request payload
         $payload = $request->getContent();
 
         // Retrieve the signature from the request headers
@@ -143,33 +135,34 @@ public function handleSubscriptionRenewal(Request $request)
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-    if ($payload['type'] === 'invoice.payment_succeeded') {
-        // Subscription renewal successful, retrieve subscription ID
-        $subscriptionId = $payload['data']['object']['subscription'];
+        if ($payload['type'] === 'invoice.payment_succeeded') {
+            // Subscription renewal successful, retrieve subscription ID
+            $subscriptionId = $payload['data']['object']['subscription'];
 
-        // Perform any necessary actions, such as updating user records
-        $subscription = Subscription::retrieve($subscriptionId);
-        $customerId = $subscription->customer;
+            // Perform any necessary actions, such as updating user records
+            $subscription = Subscription::retrieve($subscriptionId);
+            $customerId = $subscription->customer;
 
-        // Retrieve user based on Stripe customer ID
-        $user = User::where('stripe_id', $customerId)->first();
+            // Retrieve user based on Stripe customer ID
+            $user = User::where('stripe_id', $customerId)->first();
 
-        // Update user's subscription status or perform other actions
-        // For example:
-        $user->subscription_status = 'active';
-        $user->save();
+            // Update user's subscription status or perform other actions
+            // For example:
+            $user->subscription_status = 'active';
+            $user->save();
 
-        // Calculate the renewal date
-        $nextRenewalDate = $subscription->current_period_end;
-        $twoDaysBeforeRenewal = date('Y-m-d', strtotime('-2 days', $nextRenewalDate));
+            // Calculate the renewal date
+            $nextRenewalDate = $subscription->current_period_end;
+            $twoDaysBeforeRenewal = date('Y-m-d', strtotime('-2 days', $nextRenewalDate));
 
-        // Check if the renewal date is within two days
-        if (strtotime($twoDaysBeforeRenewal) <= strtotime('now')) {
-            // Send notification to user about upcoming renewal
-            Mail::to($user->email)->send(new SubscriptionRenewalReminder);
+            // Check if the renewal date is within two days
+            if (strtotime($twoDaysBeforeRenewal) <= strtotime('now')) {
+                // Send notification to user about upcoming renewal
+                Mail::to($user->email)->send(new SubscriptionRenewalReminder);
+            }
         }
-    }
 
-    // Return a response to Stripe indicating successful webhook processing
-    return response()->json(['status' => 'success']);
+        // Return a response to Stripe indicating successful webhook processing
+        return response()->json(['status' => 'success']);
+    }
 }
