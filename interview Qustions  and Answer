@@ -1,0 +1,90 @@
+What is Vue.js and what are its advantages over other frameworks?
+Vue.js is a progressive JavaScript framework used for building user interfaces. Its advantages over other frameworks include:
+
+Simple and easy to understand syntax.
+Lightweight and fast.
+Component-based architecture for reusability and maintainability.
+Seamless integration with existing projects.
+Comprehensive documentation and active community support.
+How do you create a Vue instance?
+You create a Vue instance by passing an options object to the Vue constructor. For example:
+
+javascript
+Copy code
+const app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+});
+Differentiate between props and state in Vue.js.
+
+Props: Props are properties passed from a parent component to a child component. They are immutable and can only be changed by the parent component.
+State: State refers to the internal data of a component. It is mutable and can be modified within the component using methods like this.$set or this.setState.
+What are directives in Vue.js? Provide examples.
+Directives are special tokens in the markup that tell the library to do something to a DOM element. Examples include v-if, v-for, v-bind, and v-on.
+
+How does Vue.js handle user input and form validation?
+Vue.js provides the v-model directive for two-way data binding, which simplifies handling user input. For form validation, you can use built-in validators or create custom validation methods.
+
+Explain Vue Router and its usage.
+Vue Router is the official router for Vue.js. It allows you to define routes and their corresponding components, enabling client-side routing in a Vue.js application. Usage involves defining routes using vue-router and then navigating between them using <router-link> and $router objects.
+
+What is Vuex and when would you use it in a Vue.js application?
+Vuex is a state management pattern and library for Vue.js applications. It is used when your application has complex state management needs, such as sharing state among multiple components or handling asynchronous operations.
+
+Describe the concept of reactivity in Vue.js.
+Reactivity in Vue.js refers to the ability of the framework to automatically update the DOM when the underlying data changes. This is achieved through the use of getters and setters, allowing Vue.js to track dependencies and update components efficiently.
+
+How do you handle event handling in Vue.js?
+Event handling in Vue.js is done using the v-on directive or shorthand @. You can bind methods to DOM events and handle them accordingly.
+
+What is the difference between computed properties and methods in Vue.js?
+
+Computed properties: Computed properties are cached based on their dependencies and are recalculated only when their dependencies change.
+Methods: Methods are re-evaluated whenever the component re-renders, regardless of whether their dependencies have changed or not.
+How would you implement conditional rendering in Vue.js?
+Conditional rendering in Vue.js can be achieved using directives like v-if, v-else, v-else-if, or v-show.
+
+Explain the concept of mixins in Vue.js and provide an example.
+Mixins are a way to share reusable code between Vue components. They allow you to encapsulate common functionalities and use them across multiple components. For example:
+
+javascript
+Copy code
+const myMixin = {
+  created() {
+    console.log('Mixin created');
+  }
+};
+
+Vue.component('my-component', {
+  mixins: [myMixin],
+  created() {
+    console.log('Component created');
+  }
+});
+What are slots in Vue.js and how are they useful?
+Slots are placeholders in a component's template that allow you to inject content from the parent component. They are useful for creating flexible and reusable components.
+
+How do you perform AJAX requests in Vue.js?
+You can perform AJAX requests in Vue.js using the axios library or using the built-in fetch API.
+
+Explain the significance of the key attribute in Vue.js.
+The key attribute is used to provide a unique identifier for Vue.js to track and manage DOM elements within a list of elements. It helps Vue.js efficiently update the DOM when the order of elements changes.
+
+How do you optimize performance in a Vue.js application?
+Performance optimization in Vue.js involves techniques such as using virtual DOM, implementing lazy loading, optimizing component rendering, and minimizing re-renders.
+
+What are scoped styles in Vue.js?
+Scoped styles in Vue.js are CSS styles that are scoped to a specific component. They are encapsulated within the component's scope and do not affect other components or the global styles.
+
+How do you handle transitions and animations in Vue.js?
+Vue.js provides built-in transition and animation features that can be applied using CSS classes and JavaScript hooks. You can use directives like v-if, v-show, and v-for along with transition classes to create smooth animations.
+
+What are the differences between Vue.js version 2 and version 3?
+Some key differences between Vue.js version 2 and version 3 include:
+
+Vue 3 introduces the Composition API for organizing and reusing code logic.
+Vue 3 offers better TypeScript support.
+Vue 3 is smaller, faster, and more tree-shakable compared to Vue 2.
+Vue 3 introduces the teleport component for rendering content at a different location in the DOM hierarchy.
