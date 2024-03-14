@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-for Directive Example</title>
+  <!-- Include Vue.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <ul>
+    <!-- Using v-for to render a list of items -->
+    <li v-for="item in items" :key="item.id">{{ item.name }}</li>
+  </ul>
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    items: [ // Array of items to be rendered
+      { id: 1, name: 'Item 1' },
+      { id: 2, name: 'Item 2' },
+      { id: 3, name: 'Item 3' }
+    ]
+  }
+});
+</script>
+
+</body>
+</html>
