@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-if Directive Example</title>
+  <!-- Include Vue.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <button @click="toggleElement">Toggle Element</button>
+  <!-- This div will be conditionally rendered -->
+  <div v-if="isShown">This element is shown</div>
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    isShown: true // Initially, the element is shown
+  },
+  methods: {
+    toggleElement() {
+      // Toggle the value of isShown to show/hide the element
+      this.isShown = !this.isShown;
+    }
+  }
+});
+</script>
+
+</body>
+</html>
