@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-on Directive Example</title>
+  <!-- Include Vue.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <!-- Using v-on to attach a click event listener -->
+  <button v-on:click="handleClick">Click me</button>
+</div>
+
+<script>
+new Vue({
+  el: '#app',
+  methods: {
+    handleClick() {
+      // Method to be executed when the button is clicked
+      alert('Button clicked!');
+    }
+  }
+});
+</script>
+
+</body>
+</html>
