@@ -1,0 +1,11 @@
+use Illuminate\Support\Facades\Cache;
+
+Route::get('/get-users', function (Request $request) {
+    // Check if users data exists in cache
+    $users = Cache::remember('users', $minutes, function () {
+        // Fetch users data from the database if not found in cache
+        return User::all();
+    });
+
+    return response()->json($users);
+});
