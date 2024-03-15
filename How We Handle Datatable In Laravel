@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTables Example</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+</head>
+<body>
+
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Table rows will be populated here -->
+    </tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": "/get-users",
+            "columns": [
+                { "data": "name" },
+                { "data": "email" },
+                { "data": "role" }
+            ]
+        });
+    });
+</script>
+
+</body>
+</html>
+
+// Web.php
+
+<?php
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Route;
+
+// Route for serving the DataTables data via AJAX
+Route::get('/get-users', function (Request $request) {
+    $users = User::all();
+    return response()->json($users);
+});
+
+Route::get('/index', function (Request $request) {
+   return view('index');
+});
