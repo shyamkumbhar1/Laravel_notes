@@ -9,3 +9,6 @@ Route::get('/get-users', function (Request $request) {
 
     return response()->json($users);
 });
+
+// Clear the 'users' cache when users data changes
+Cache::forget('users');
