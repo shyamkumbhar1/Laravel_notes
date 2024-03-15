@@ -1,0 +1,25 @@
+In JavaScript, there are several built-in global objects and variables that are available in all environments where JavaScript runs. Some of the commonly used global variables and objects include:
+
+globalThis: Introduced in ECMAScript 2020, globalThis provides a consistent way to access the global object in any environment.
+
+Math: The Math object provides mathematical constants and functions for performing mathematical operations.
+
+Date: The Date object is used for working with dates and times, including creating, manipulating, and formatting dates.
+
+console: The console object provides methods for logging messages to the console, such as log(), error(), warn(), etc.
+
+setTimeout() and setInterval(): These functions are used for executing code asynchronously after a specified delay (for setTimeout()) or at regular intervals (for setInterval()).
+
+clearTimeout() and clearInterval(): These functions are used for canceling timeouts and intervals set by setTimeout() and setInterval().
+
+window: In web browsers, window represents the global browser window and provides access to browser-related features.
+
+document: In web browsers, document represents the web page loaded in the browser window and provides access to the HTML document's content and structure.
+
+navigator: The navigator object provides information about the browser and the user's system, such as browser name, version, and user agent.
+
+localStorage and sessionStorage: These objects are used for storing key-value pairs locally in the user's browser. localStorage persists even after the browser is closed, while sessionStorage persists only for the duration of the page session.
+
+JSON: The JSON object provides methods for parsing JSON strings and converting JavaScript values to JSON strings (and vice versa).
+
+Promise: The Promise object represents the eventual completion (or failure) of an asynchronous operation and its resulting value.
