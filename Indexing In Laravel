@@ -1,0 +1,38 @@
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddIndexesToUsersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id(); // Primary Key Index
+            $table->string('email')->unique(); // Unique Index
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->timestamps();
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->index('email'); // Index
+            $table->foreignId('role_id')->constrained(); // Foreign Key Index
+            $table->index(['first_name', 'last_name']); // Composite Index
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+}
