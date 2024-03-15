@@ -1,0 +1,35 @@
+// Set session data
+sessionStorage.setItem('session_key', 'session_value');
+
+// Get session data
+var sessionData = sessionStorage.getItem('session_key');
+console.log("Session Data:", sessionData); // Output: session_value
+
+
+// Set a cookie for user authentication
+var userId = 12345;
+var username = "john_doe";
+var expiryDate = new Date();
+expiryDate.setDate(expiryDate.getDate() + 30); // Cookie expires in 30 days
+var cookieValue = "userId=" + userId + "&username=" + username;
+
+// Set the cookie for a specific path (e.g., "/dashboard")
+var path = "/dashboard";
+
+document.cookie = "user_auth=" + cookieValue + "; expires=" + expiryDate.toUTCString() + "; path=" + path;
+// document.cookie = `user_auth=${cookieValue}; expires=${expiryDate.toUTCString()}; path=${path}`; // Write in onother way
+
+
+
+// Get cookies
+var cookies = document.cookie;
+console.log("Cookies:", cookies); // Output: "cookie_name=cookie_value; ..."
+
+// Remove individual session item
+sessionStorage.removeItem('session_key');
+
+// Clear all session data
+sessionStorage.clear();
+
+// Set cookie expiration to a past time
+document.cookie = "cookie_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
