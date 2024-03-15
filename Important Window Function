@@ -1,0 +1,42 @@
+There are several important functions associated with the window object in JavaScript, especially when working within a web browser environment. Here are some commonly used ones:
+
+alert(): Displays a modal dialog with a message and an OK button.
+javascript
+Copy code
+window.alert("Hello, world!");
+confirm(): Displays a modal dialog with a message, an OK button, and a Cancel button. Returns true if the user clicks OK, and false otherwise.
+javascript
+Copy code
+var result = window.confirm("Are you sure?");
+if (result) {
+    // User clicked OK
+} else {
+    // User clicked Cancel
+}
+prompt(): Displays a modal dialog with a message, an input field for the user to enter text, and OK and Cancel buttons. Returns the text entered by the user or null if the user clicks Cancel.
+javascript
+Copy code
+var userInput = window.prompt("Please enter your name:");
+console.log("User entered:", userInput);
+setTimeout(): Calls a function or executes a code snippet after a specified delay (in milliseconds).
+javascript
+Copy code
+function greet() {
+    console.log("Hello, world!");
+}
+window.setTimeout(greet, 2000); // Call greet() after 2 seconds
+setInterval(): Calls a function or executes a code snippet repeatedly, with a fixed time delay between each call.
+javascript
+Copy code
+function tick() {
+    console.log("Tick!");
+}
+window.setInterval(tick, 1000); // Call tick() every second
+clearTimeout(): Cancels a timeout previously set with setTimeout().
+javascript
+Copy code
+var timeoutId = window.setTimeout(function() {
+    console.log("This will never be called!");
+}, 5000);
+window.clearTimeout(timeoutId); // Cancel the timeout
+clearInterval(): Cancels an interval previously set with setInterval().
