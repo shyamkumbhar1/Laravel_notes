@@ -1,0 +1,25 @@
+use App\Models\User;
+
+class UserController extends Controller
+{
+    public function fetchData($paginate = true)
+    {
+        if ($paginate) {
+            // Retrieve paginated users for displaying in a frontend view
+            $users = User::paginate(10); // Retrieve 10 users per page
+        } else {
+            // Process users in batches of 1000 for backend operations
+            User::chunk(1000, function ($users) {
+                foreach ($users as $user) {
+                    // Process each user (e.g., perform batch updates, calculations, etc.)
+                    $user->update(['processed' => true]);
+                }
+            });
+            
+            // Set users variable to null for paginated response
+            $users = null;
+        }
+
+        return view('users.index', compact('users'));
+    }
+}
