@@ -1,0 +1,64 @@
+use Illuminate\Support\Facades\Validator;
+
+private function importExcel($file)
+{
+    $importErrors = [];
+
+    Excel::filter('chunk')->load($file)->chunk(1000, function ($rows) use (&$importErrors) {
+        foreach ($rows as $row) {
+            $this->validateAndInsertRow($row, $importErrors);
+        }
+    });
+
+    $this->handleImportErrors($importErrors);
+}
+
+private function validateAndInsertRow($row, &$importErrors)
+{
+    $validator = $this->validateRow($row);
+
+    if ($validator->fails()) {
+        $importErrors[] = [
+            'row' => $row->toArray(),
+            'error' => $validator->errors()->all(),
+        ];
+        return; // Skip inserting invalid record
+    }
+
+    try {
+        $this->insertRow($row);
+    } catch (\Exception $e) {
+        $importErrors[] = [
+            'row' => $row->toArray(),
+            'error' => $e->getMessage(),
+        ];
+    }
+}
+
+private function validateRow($row)
+{
+    return Validator::make($row->toArray(), [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users',
+        'password' => 'required|string|min:6',
+    ]);
+}
+
+private function insertRow($row)
+{
+    User::create([
+        'name' => $row->name,
+        'email' => $row->email,
+        'password' => Hash::make($row->password),
+    ]);
+}
+
+private function handleImportErrors($importErrors)
+{
+    if (!empty($importErrors)) {
+        foreach ($importErrors as $error) {
+            // Log the error or perform any other action
+            // You can access the row data and error message using $error['row'] and $error['error']
+        }
+    }
+}
