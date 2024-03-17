@@ -1,0 +1,47 @@
+// php artisan make:provider PaymentGatewayServiceProvider
+
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use App\Services\PaymentGateway;
+
+class PaymentGatewayServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        //
+    }
+
+    public function register()
+    {
+        $this->app->singleton('payment_gateway', function ($app) {
+            return new PaymentGateway(config('services.payment_gateway.api_key'));
+        });
+    }
+}
+
+// PaymentGateway Services : 
+<?php
+
+namespace App\Services;
+
+class PaymentGateway
+{
+    protected $apiKey;
+
+    public function __construct($apiKey)
+    {
+        $this->apiKey = $apiKey;
+    }
+
+    // Methods to interact with the payment gateway API...
+}
+
+
+// Register in service provider .
+'providers' => [
+    // Other service providers...
+    App\Providers\PaymentGatewayServiceProvider::class,
+],
