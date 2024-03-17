@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Imports;
+
+use App\Models\User;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+
+class UsersImport implements ToModel, WithChunkReading , ShouldQueue
+{
+    public function model(array $row)
+    {
+        return new User([
+            'name' => $row[0],
+            'email' => $row[1],
+            // Add other fields as needed
+        ]);
+    }
+
+    public function chunkSize(): int
+    {
+        return 100; // Define chunk size (e.g., 100 records per chunk)
+    }
+}
+
+
+//
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Imports\UsersImport;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Queue;
+
+
+class ImportController extends Controller
+{
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+        ]);
+
+        $file = $request->file('file');
+
+        Excel::import(new UsersImport, $file);
+	   
+
+        return redirect()->back()->with('success', 'Excel data imported successfully.');
+    }
+}
