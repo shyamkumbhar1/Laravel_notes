@@ -1,0 +1,19 @@
+charge.succeeded: Triggered when a charge is successfully processed.
+charge.failed: Triggered when a charge fails to be processed.
+customer.created: Triggered when a new customer is created.
+customer.updated: Triggered when an existing customer's details are updated.
+customer.deleted: Triggered when a customer is deleted.
+invoice.created: Triggered when a new invoice is created.
+invoice.payment_failed: Triggered when an invoice payment fails.
+invoice.payment_succeeded: Triggered when an invoice payment succeeds.
+invoice.updated: Triggered when an invoice is updated.
+payment_intent.created: Triggered when a new PaymentIntent is created.
+payment_intent.succeeded: Triggered when a PaymentIntent succeeds.
+payment_intent.payment_failed: Triggered when a PaymentIntent fails to be processed.
+payment_method.attached: Triggered when a new payment method is attached to a cusomer
+payment_method.detached: Triggered when a payment method is detached from a customer.
+refund.created: Triggered when a refund is created.
+refund.updated: Triggered when a refund is updated.
+subscription.created: Triggered when a new subscription is created.
+subscription.updated: Triggered when an existing subscription is updated.
+subscription.deleted: Triggered when a subscription is canceled or deleted.
