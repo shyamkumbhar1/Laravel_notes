@@ -1,0 +1,38 @@
+use Illuminate\Support\Facades\DB;
+use App\Models\Product;
+use App\Models\Inventory;
+
+public function purchaseProducts($orderItems)
+{
+    // Start a database transaction
+    DB::beginTransaction();
+
+    try {
+        foreach ($orderItems as $item) {
+            // Retrieve product and inventory information
+            $product = Product::findOrFail($item['product_id']);
+            $inventory = Inventory::where('product_id', $item['product_id'])->first();
+
+            // Check if the requested quantity is available in inventory
+            if ($inventory->quantity < $item['quantity']) {
+                throw new \Exception("Insufficient stock for product: " . $product->name);
+            }
+
+            // Deduct the sold quantity from inventory
+            $inventory->quantity -= $item['quantity'];
+            $inventory->save();
+        }
+
+        // Commit the transaction if all inventory updates are successful
+        DB::commit();
+
+        // Success message or further actions
+        return "Order placed successfully";
+    } catch (\Exception $e) {
+        // Rollback the transaction if any error occurs
+        DB::rollback();
+
+        // Handle the error (e.g., log it, display a message)
+        return "Order failed: " . $e->getMessage();
+    }
+}
