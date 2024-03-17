@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Imports;
+
+use App\Models\User;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+
+class UsersImport implements ToModel, WithChunkReading , ShouldQueue
+{
+    public function model(array $row)
+    {
+        return new User([
+            'name' => $row[0],
+            'email' => $row[1],
+            // Add other fields as needed
+        ]);
+    }
+
+    public function chunkSize(): int
+    {
+        return 100; // Define chunk size (e.g., 100 records per chunk)
+    }
+}
+
+
+//
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Imports\UsersImport;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Queue;
+
+
+class ImportController extends Controller
+{
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+        ]);
+
+        $file = $request->file('file');
+
+        // Queue the import job
+        ProcessImport::dispatch($file);
+
+        return redirect()->back()->with('success', 'Excel data import process queued successfully.');
+    
+    }
+}
+
+
+//php artisan make:job ProcessImport
+namespace App\Jobs;
+
+use App\Imports\UsersImport;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Maatwebsite\Excel\Facades\Excel;
+
+class ProcessImport implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $file;
+
+    public function __construct($file)
+    {
+        $this->file = $file;
+    }
+
+    public function handle()
+    {
+        Excel::import(new UsersImport, $this->file);
+    }
+}
+
+
+php artisan queue:work --queue=default
