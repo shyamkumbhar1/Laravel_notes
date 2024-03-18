@@ -4,52 +4,55 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
 
-class StringController extends Controller
+class StringManipulationController extends Controller
 {
-    public function stringFunctions()
-    {
-        
-        
-        // 3. camel()
-        $result3 = Str::camel('hello_world'); // Output: 'helloWorld'
-        
-        // 4. contains()
-        $result4 = Str::contains('Hello World', 'World'); // Output: true
-                
-        // 6. slug()
-        $result6 = Str::slug('Laravel 8 Release'); // Output: 'laravel-8-release'
-        
-        // 7. snake()
-        $result7 = Str::snake('helloWorld'); // Output: 'hello_world'
-        
-        // 9. limit()
-        $result9 = Str::limit('Lorem ipsum dolor sit amet', 10); // Output: 'Lorem ipsu...'
-        
-        // 10. length()
-        $result10 = Str::length('Hello World'); // Output: 11
-        
-        // 11. plural()
-        $result11 = Str::plural('apple'); // Output: 'apples'
-        
-        // 12. singular()
-        $result12 = Str::singular('apples'); // Output: 'apple'
+    private $str;
 
-         // 13. explode()
-        $result12 = Str::explode('Hello World'); // Output: 'apple'
-        // Return results
-        return response()->json([
-            'after' => $result1,
-            'before' => $result2,
-            'camel' => $result3,
-            'contains' => $result4,
-            'endsWith' => $result5,
-            'slug' => $result6,
-            'snake' => $result7,
-            'startsWith' => $result8,
-            'limit' => $result9,
-            'length' => $result10,
-            'plural' => $result11,
-            'singular' => $result12,
-        ]);
+    public function __construct()
+    {
+        $this->str = "Shyam";  
+    }
+
+    public function reverseString() {
+        return Str::reverse($this->str); // Output is: 'mayhs'
+    }
+
+    public function findWordInString($searchTerm) {
+        return Str::contains($this->str, $searchTerm); // Output is: true/false
+    }
+
+    public function countWordsInString() {
+        return Str::wordCount($this->str); // Output is: 1
+    }
+
+    public function removeSpecialCharacters() {
+        return Str::of($this->str)->removeRegex('/[^A-Za-z0-9\-]/')->__toString(); // Output is: 'Shyam'
+    }
+
+    public function replaceWordInString($searchTerm, $replacement) {
+        return Str::of($this->str)->replace($searchTerm, $replacement)->__toString(); // Output is: 'Shyam'
+    }
+
+    public function isPalindrome() {
+        $str = Str::lower(preg_replace('/[^A-Za-z0-9]/', '', $this->str));
+        return $str === Str::reverse($str); // Output is: true/false
+    }
+
+    public function extractNumbersFromString() {
+        return Str::of($this->str)->match('/\d+/'); // Output is: 'Shyam'
+    }
+
+    public function convertToTitleCase() {
+        return Str::of($this->str)->title(); // Output is: 'Shyam'
+    }
+
+    public function removeDuplicateWords() {
+        return Str::of($this->str)->unique()->__toString(); // Output is: 'Shyam'
+    }
+
+    public function findLongestWord() {
+        return collect(explode(' ', $this->str))->max(function ($word) {
+            return Str::length($word);
+        }); // Output is: 'Shyam'
     }
 }
