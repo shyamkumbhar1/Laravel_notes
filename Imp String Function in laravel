@@ -8,29 +8,19 @@ class StringController extends Controller
 {
     public function stringFunctions()
     {
-        // 1. after()
-        $result1 = Str::after('Hello World', 'Hello '); // Output: 'World'
         
-        // 2. before()
-        $result2 = Str::before('Hello World', ' World'); // Output: 'Hello'
         
         // 3. camel()
         $result3 = Str::camel('hello_world'); // Output: 'helloWorld'
         
         // 4. contains()
         $result4 = Str::contains('Hello World', 'World'); // Output: true
-        
-        // 5. endsWith()
-        $result5 = Str::endsWith('Hello World', 'World'); // Output: true
-        
+                
         // 6. slug()
         $result6 = Str::slug('Laravel 8 Release'); // Output: 'laravel-8-release'
         
         // 7. snake()
         $result7 = Str::snake('helloWorld'); // Output: 'hello_world'
-        
-        // 8. startsWith()
-        $result8 = Str::startsWith('Hello World', 'Hello'); // Output: true
         
         // 9. limit()
         $result9 = Str::limit('Lorem ipsum dolor sit amet', 10); // Output: 'Lorem ipsu...'
@@ -44,6 +34,8 @@ class StringController extends Controller
         // 12. singular()
         $result12 = Str::singular('apples'); // Output: 'apple'
 
+         // 13. explode()
+        $result12 = Str::explode('Hello World'); // Output: 'apple'
         // Return results
         return response()->json([
             'after' => $result1,
