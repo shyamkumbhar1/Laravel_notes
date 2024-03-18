@@ -10,7 +10,7 @@ class StringManipulationController extends Controller
 
     public function __construct()
     {
-        $this->str = "Shyam";  
+        $this->str = "Shyam Shyam";  
     }
 
     public function reverseString() {
@@ -30,7 +30,7 @@ class StringManipulationController extends Controller
     }
 
     public function replaceWordInString($searchTerm, $replacement) {
-        return Str::of($this->str)->replace($searchTerm, $replacement)->__toString(); // Output is: 'Shyam'
+    return Str::replace($searchTerm, $replacement, $this->str); // Output is: 'Shyam'
     }
 
     public function isPalindrome() {
