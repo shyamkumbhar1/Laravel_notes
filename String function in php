@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class StringManipulationController extends Controller
+{
+    public $str;
+
+    public function __construct(){
+        $this->str = "Shyam";
+    }
+
+    public function reverseString() {
+        return strrev($this->str); // Output is: mayhs
+    }
+
+    public function findWordInString($searchTerm) {
+        return strpos($this->str, $searchTerm) !== false; // Output is: true/false
+    }
+
+    public function countWordsInString() {
+        return str_word_count($this->str); // Output is: number of words
+    }
+
+    public function removeSpecialCharacters() {
+        return preg_replace('/[^A-Za-z0-9\-]/', '', $this->str); // Output is: string with special characters removed
+    }
+
+    public function replaceWordInString($searchTerm, $replacement) {
+        return str_replace($searchTerm, $replacement, $this->str); // Output is: string with replaced word
+    }
+
+    public function isPalindrome() {
+        $str = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $this->str));
+        return $str === strrev($str); // Output is: true/false
+    }
+
+    public function extractNumbersFromString() {
+        preg_match_all('!\d+!', $this->str, $matches);
+        return $matches[0]; // Output is: array of numbers found in string
+    }
+
+    public function convertToTitleCase() {
+        return ucwords(strtolower($this->str)); // Output is: string converted to title case
+    }
+
+    public function removeDuplicateWords() {
+        $words = explode(' ', $this->str);
+        $uniqueWords = array_unique($words);
+        return implode(' ', $uniqueWords); // Output is: string with duplicate words removed
+    }
+
+    public function findLongestWord() {
+        $words = str_word_count($this->str, 1);
+        $longestWord = '';
+        foreach ($words as $word) {
+            if (strlen($word) > strlen($longestWord)) {
+                $longestWord = $word;
+            }
+        }
+        return $longestWord; // Output is: longest word found in string
+    }
+}
