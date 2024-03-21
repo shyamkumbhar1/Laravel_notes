@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX Request Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<button id="loadData">Load Data</button>
+
+<div id="output"></div>
+
+<script>
+    $(document).ready(function(){
+        $('#loadData').click(function(){
+            $.ajax({
+                url: "{{ route('getData') }}", // Use route function to generate URL
+                type: 'GET',
+				async: false, // Make the request synchronous
+                success: function(data) {
+                    // Handle the data
+                    var output = $('#output');
+					
+                    var html = '<h2>Data</h2>' +
+					'<p>ID: ' + data.id + '</p>' +
+					'<p>Name: ' + data.name + '</p>';
+					document.getElementById('output').innerHTML = html;
+
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+<?php
+use Illuminate\Support\Facades\Route;
+
+Route::get('/getData', function () {
+    // Your logic to fetch data
+    $data = ['id' => 1, 'name' => 'John Doe'];
+
+    return response()->json($data);
+})->name('getData');
+?>
+
+</body>
+</html>
